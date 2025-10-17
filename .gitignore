@@ -2,11 +2,11 @@
 node_modules/
 package-lock.json
 
-# Foundry
+# Foundry - lib/ será instalado via setup.sh
+packages/foundry-workspace/lib/
 packages/foundry-workspace/out/
 packages/foundry-workspace/cache/
 packages/foundry-workspace/broadcast/
-packages/foundry-workspace/lib/forge-std/
 
 # Hardhat
 packages/hardhat-workspace/artifacts/
@@ -24,7 +24,6 @@ packages/hardhat-workspace/typechain-types/
 *.swp
 *.swo
 *~
-.DS_Store
 
 # OS
 .DS_Store
