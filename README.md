@@ -28,6 +28,7 @@ solidity-foundry-hardhat-monorepo/
 │       ├── hardhat.config.ts
 │       └── package.json
 │
+├── setup.sh                   # Setup scripts
 ├── package.json               # Root package with npm scripts
 ├── .gitignore
 └── README.md
@@ -39,30 +40,50 @@ solidity-foundry-hardhat-monorepo/
 
 - Node.js v20 (LTS)
 - Foundry ([installation guide](https://book.getfoundry.sh/getting-started/installation))
+- **WSL** (for Windows users) - Foundry requires Linux/Mac/WSL
 
 ### Installation
 ```bash
 # Clone the repository
+# SSH (recommended):
+git clone git@github.com:jminango20/solidity-foundry-hardhat-monorepo.git
+
+# OR HTTPS:
 git clone https://github.com/jminango20/solidity-foundry-hardhat-monorepo.git
+
 cd solidity-foundry-hardhat-monorepo
 
-# Install dependencies
-cd packages/contracts
-npm install
+# Run automated setup (Linux/Mac/WSL only)
+./setup.sh
 
-cd ../hardhat-workspace
-npm install
-
-# Setup symlinks (should already be in git)
-# If needed, create manually:
-cd packages/foundry-workspace/lib
-ln -s ../../contracts/node_modules node_modules
-
-cd ../../hardhat-workspace
-ln -s ../contracts/src contracts
-cd node_modules
-ln -s ../../contracts/node_modules/@openzeppelin @openzeppelin
+# Verify installation
+npm run test:all
 ```
+
+### What `setup.sh` does:
+- Installs contracts dependencies (OpenZeppelin)  
+- Installs `forge-std` for Foundry  
+- Creates symlinks for shared contracts and dependencies  
+- Installs Hardhat dependencies  
+- Tests that both Foundry and Hardhat compile successfully
+
+### Important: Windows Users
+**Foundry requires WSL (Windows Subsystem for Linux).**
+
+Run all commands in WSL, not in Git Bash or PowerShell:
+```bash
+# Open WSL
+wsl
+
+# Navigate to project
+cd /mnt/c/your-path/solidity-foundry-hardhat-monorepo
+
+# Run setup
+./setup.sh
+```
+
+For Hardhat-only development on Windows without Foundry, you can skip the Foundry setup.
+
 
 ## Available Commands
 
@@ -87,6 +108,14 @@ forge test --match-test test_Increment   # Run specific test
 # Deploy scripts (simulation)
 forge script script/DeployCounter.s.sol
 forge script script/DeployToken.s.sol
+
+# Deploy to local network
+# Terminal 1: anvil
+# Terminal 2:
+forge script script/DeployCounter.s.sol \
+  --rpc-url http://127.0.0.1:8545 \
+  --private-key  \
+  --broadcast
 ```
 
 ### Hardhat Workspace
@@ -97,10 +126,15 @@ npm run compile                          # Compile contracts
 npm test                                 # Run tests
 npx hardhat test --grep "Counter"        # Run specific test
 
-# Deploy scripts
+# Deploy scripts (simulation)
 npx hardhat run scripts/deployCounter.ts
 npx hardhat run scripts/deployToken.ts
 npx hardhat run scripts/deploy.ts        # Deploy all
+
+# Deploy to local network
+# Terminal 1: npx hardhat node
+# Terminal 2:
+npx hardhat run scripts/deploy.ts --network localhost
 ```
 
 ## How It Works
@@ -148,29 +182,47 @@ npm install @openzeppelin/contracts-upgradeable
 # Both frameworks have access automatically via symlinks
 ```
 
-## 🚢 Deployment
+## Deployment
 
-### Local Development
+### Local Development with Anvil (Foundry)
 ```bash
-# Terminal 1: Start local node
+# Terminal 1: Start Anvil
+anvil
+
+# Terminal 2: Deploy with Foundry
+cd packages/foundry-workspace
+forge script script/DeployCounter.s.sol \
+  --rpc-url http://127.0.0.1:8545 \
+  --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
+  --broadcast
+```
+
+### Local Development with Hardhat Node
+```bash
+# Terminal 1: Start Hardhat node
 cd packages/hardhat-workspace
 npx hardhat node
 
 # Terminal 2: Deploy
+cd packages/hardhat-workspace
 npx hardhat run scripts/deploy.ts --network localhost
-```
 
 ### Testnet/Mainnet
 
-Configure networks in `packages/hardhat-workspace/hardhat.config.ts` and deploy:
+Configure networks in `packages/hardhat-workspace/hardhat.config.ts` or `packages/foundry-workspace/foundry.toml` and deploy:
+
+**Hardhat:**
 ```bash
 npx hardhat run scripts/deploy.ts --network sepolia
 ```
 
-Or use Foundry:
+**Foundry:**
 ```bash
-cd packages/foundry-workspace
-forge script script/DeployCounter.s.sol --rpc-url <RPC_URL> --private-key <KEY> --broadcast
+forge script script/DeployCounter.s.sol \
+  --rpc-url $SEPOLIA_RPC_URL \
+  --private-key $PRIVATE_KEY \
+  --broadcast \
+  --verify
 ```
 
 ## Contributing
@@ -179,3 +231,35 @@ forge script script/DeployCounter.s.sol --rpc-url <RPC_URL> --private-key <KEY> 
 2. Write tests in both Foundry and Hardhat
 3. Run `npm run test:all` before committing
 4. Keep dependencies updated in `packages/contracts/package.json`
+
+## Troubleshooting
+
+### `./setup.sh: cannot execute: required file not found`
+
+This happens on Windows when line endings are wrong. Fix:
+```bash
+sed -i 's/\r$//' setup.sh
+chmod +x setup.sh
+./setup.sh
+```
+
+### Symlinks not working?
+
+Run `./setup.sh` again or manually create them:
+```bash
+# Foundry symlink
+cd packages/foundry-workspace/lib
+ln -s ../../contracts/node_modules node_modules
+
+# Hardhat symlinks
+cd packages/hardhat-workspace
+ln -s ../contracts/src contracts
+cd node_modules
+ln -s ../../contracts/node_modules/@openzeppelin @openzeppelin
+```
+
+### Compilation errors?
+
+1. Ensure all dependencies are installed: `cd packages/contracts && npm install`
+2. Check that symlinks exist: `ls -la packages/hardhat-workspace/contracts`
+3. Re-run setup: `./setup.sh`
