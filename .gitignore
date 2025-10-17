@@ -48,3 +48,5 @@ gasReporterOutput.json
 # Hardhat specific
 artifacts-zk/
 cache-zk/
+packages/hardhat-workspace/contracts
+packages/foundry-workspace/lib/node_modules
