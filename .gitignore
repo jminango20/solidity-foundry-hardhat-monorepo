@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Foundry
+packages/foundry-workspace/out/
+packages/foundry-workspace/cache/
+packages/foundry-workspace/broadcast/
+packages/foundry-workspace/lib/forge-std/
+
+# Hardhat
+packages/hardhat-workspace/artifacts/
+packages/hardhat-workspace/cache/
+packages/hardhat-workspace/typechain-types/
+
+# Environment variables
+.env
+.env.local
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage
+coverage/
+coverage.json
+.coverage_artifacts/
+.coverage_cache/
+.coverage_contracts/
+
+# Gas reports
+gasReporterOutput.json
+
+# Hardhat specific
+artifacts-zk/
+cache-zk/

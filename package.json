@@ -1,0 +1,16 @@
+{
+  "name": "solidity-foundry-hardhat-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Monorepo with Foundry and Hardhat sharing the same Solidity contracts",
+  "scripts": {
+    "foundry:build": "cd packages/foundry-workspace && forge build",
+    "foundry:test": "cd packages/foundry-workspace && forge test",
+    "hardhat:compile": "cd packages/hardhat-workspace && npm run compile",
+    "hardhat:test": "cd packages/hardhat-workspace && npm test",
+    "test:all": "npm run foundry:test && npm run hardhat:test"
+  },
+  "keywords": ["solidity", "foundry", "hardhat", "monorepo", "smart-contracts"],
+  "author": "",
+  "license": "MIT"
+}

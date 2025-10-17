@@ -1,0 +1,17 @@
+{
+  "name": "@monorepo/hardhat-workspace",
+  "version": "1.0.0",
+  "description": "Hardhat development environment",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:local": "hardhat run scripts/deploy.ts --network localhost",
+    "node": "hardhat node"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.0",
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

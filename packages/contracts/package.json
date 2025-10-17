@@ -1,0 +1,13 @@
+{
+  "name": "@monorepo/contracts",
+  "version": "1.0.0",
+  "description": "Smart contracts source code",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": ["solidity", "smart-contracts"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.1.0"
+  }
+}
