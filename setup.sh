@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "�� Setting up Solidity Foundry + Hardhat Monorepo..."
+echo "Setting up Solidity Foundry + Hardhat Monorepo..."
 echo ""
 
 # Install contracts dependencies
